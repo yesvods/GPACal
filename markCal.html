@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>绩点计算器</title>
+    <link rel="stylesheet" href="./bootstrap-3.2.0-dist/css/bootstrap.min.css" />
+
+    <style type="text/css">
+      * {
+        font-family: Georgia, "Times New Roman", 
+             "Microsoft YaHei", "微软雅黑", 
+             STXihei, "华文细黑", 
+             serif;
+      }
+      body {
+        padding-top: 20px;
+      }
+      .input-group {
+        margin-bottom: 20px;
+      }
+      #resultContainer {
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="jumbotron">
+        <h1>绩点计算工具</h1>
+        <p>很久以前..这个曾经是一个c版的黑白框计算器，直到一天，楼主学了前端...</p>
+        <p><a class="btn btn-primary btn-lg" role="button" href="http://itanguo.cn" target="_blank">不去我博客看看吗？</a></p>
+      </div>
+    </div>
+    <div class="container" id="cal">
+      <div class="row" id="calRow">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+          <div class="input-group">
+            <span class="input-group-addon">第1科目：</span>
+            <input type="text" class="form-control" placeholder="学分">
+            <input type="text" class="form-control" placeholder="成绩">
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+          <div class="input-group">
+            <span class="input-group-addon">第2科目：</span>
+            <input type="text" class="form-control" placeholder="学分">
+            <input type="text" class="form-control" placeholder="成绩">
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    <div class="container">
+      <button id="delete" type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span>删掉一科</button>
+      <button id="add" type="button" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span>再加一科</button>
+      <button id="result" type="button" class="btn btn-info"><span class="glyphicon glyphicon-ok"></span>看看绩点</button>
+    </div>
+    <div class="container" id="resultContainer">
+      <div class="alert" role="alert" id="resultAlert"></div>
+    </div>  
+    <script type="text/javascript">
+      var div1 = document.createElement('div'); 
+      var cal = document.getElementById('cal');
+      var count = 2;
+      document.getElementById('delete').addEventListener('click', function(e){
+        if(count>1){
+          var group = cal.getElementsByClassName('col-lg-4');
+          group[group.length-1].remove();
+          //减少一科目
+          count--;
+        }
+      });
+      document.getElementById('add').addEventListener('click', function(e){
+        var calRow = document.getElementById('calRow');
+        
+        var col = document.createElement('div');
+        col.className = 'col-lg-4 col-md-4 col-sm-4 col-xs-4';
+
+        var input_group = document.createElement('div');
+        input_group.className = 'input-group';
+
+        var span = document.createElement('span');
+        span.innerHTML = '第'+(++count)+'科目';
+        span.className = 'input-group-addon';
+
+        var mark = document.createElement('input');
+        mark.setAttribute('type','text');
+        mark.setAttribute('placeholder','学分');
+        mark.className = 'form-control';
+
+        var score = document.createElement('input');
+        score.setAttribute('type','text');
+        score.setAttribute('placeholder','成绩');
+        score.className = 'form-control';
+        
+        input_group.appendChild(span);
+        input_group.appendChild(mark);
+        input_group.appendChild(score);
+
+        col.appendChild(input_group);
+        calRow.appendChild(col);
+      });
+      document.getElementById('result').addEventListener('click', function(e){
+        var resultAlert = document.getElementById('resultAlert');
+        var input_group = document.getElementsByClassName('input-group');
+        for(var i=0;i<input_group.length;i++){
+          var current_group = input_group[i];
+          var span = current_group.getElementsByTagName('span')[0];
+          var inputs = current_group.getElementsByTagName('input');
+          var currText = span.innerHTML ;
+          
+          if(!/\d+/.test(inputs[0].value)){
+            resultAlert.className = 'alert alert-danger';
+            resultAlert.innerHTML = '请输入'+currText+inputs[0].getAttribute('placeholder');
+            return;
+          }
+          if(!/\d+/.test(inputs[1].value)){
+            resultAlert.className = 'alert alert-danger';
+            resultAlert.innerHTML = '请输入'+currText+inputs[1].getAttribute('placeholder');
+            return;
+          }
+        }
+        //数据存放
+        var data = [];
+        for(var i=0;i<input_group.length;i++){
+          var current_group = input_group[i];
+          var mark = current_group.getElementsByTagName('input')[0].value;
+          var score = current_group.getElementsByTagName('input')[1].value;
+          data.push({
+            'mark':parseInt(mark),
+            'score':parseInt(score)
+          });
+        }
+        //添加好相应成绩的绩点
+        for(var i=0;i<data.length;i++){
+          var score = data[i].score;
+          console.log(score)
+          if(score>=90 && score<=100){
+            data[i].jidian = 4.0;
+          }else if(score>=85 && score<90){
+            data[i].jidian = 3.7;
+          }else if(score>=82 && score<85){
+            data[i].jidian = 3.3;
+          }else if(score>=78 && score<82){
+            data[i].jidian = 3.0;
+          }else if(score>=75 && score<78){
+            data[i].jidian = 2.7;
+          }else if(score>=72 && score<75){
+            data[i].jidian = 2.3;
+          }else if(score>=68 && score<72){
+            data[i].jidian = 2.0;
+          }else if(score>=64 && score<68){
+            data[i].jidian = 1.5;
+          }else if(score>=60 && score<64){
+            data[i].jidian = 1.0;
+          }else if(score<60){
+            data[i].jidian = 0;
+          }
+        }
+        //计算绩点啦
+        var sumMark = 0;
+        var sumScore = 0;
+        console.log(data)
+        for(var i=0;i<data.length;i++){
+          sumMark += data[i].mark*data[i].jidian;
+          sumScore += data[i].mark;
+        }
+        var avg = (new Number(sumMark/sumScore)).toFixed(2);
+        resultAlert.className = 'alert alert-success';
+        resultAlert.innerHTML = '总学分：'+Number(sumScore).toFixed(0) 
+        +' <br/>绩点 X 学分一共：'+Number(sumMark).toFixed(2)
+        +' <br/>平均绩点就是：'+avg;
+        
+      });
+    </script>
+  </body>
+</html>

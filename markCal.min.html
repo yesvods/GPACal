@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>绩点计算器</title>
+    <link rel="stylesheet" href="./bootstrap-3.2.0-dist/css/bootstrap.min.css" />
+    <style type="text/css">
+      * {
+        font-family: Georgia, "Times New Roman", 
+             "Microsoft YaHei", "微软雅黑", 
+             STXihei, "华文细黑", 
+             serif;
+      }
+      body {
+        padding-top: 20px;
+      }
+      .input-group {
+        margin-bottom: 20px;
+      }
+      #resultContainer {
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="jumbotron">
+        <h1>绩点计算工具</h1>
+        <p>很久以前..这个曾经是一个c版的黑白框计算器，直到一天，楼主学了前端...</p>
+        <p><a class="btn btn-primary btn-lg" role="button" href="http://itanguo.cn" target="_blank">不去我博客看看吗？</a></p>
+      </div>
+    </div>
+    <div class="container" id="cal">
+      <div class="row" id="calRow">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+          <div class="input-group">
+            <span class="input-group-addon">第1科目：</span>
+            <input type="text" class="form-control" placeholder="学分">
+            <input type="text" class="form-control" placeholder="成绩">
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+          <div class="input-group">
+            <span class="input-group-addon">第2科目：</span>
+            <input type="text" class="form-control" placeholder="学分">
+            <input type="text" class="form-control" placeholder="成绩">
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    <div class="container">
+      <button id="delete" type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span>删掉一科</button>
+      <button id="add" type="button" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span>再加一科</button>
+      <button id="result" type="button" class="btn btn-info"><span class="glyphicon glyphicon-ok"></span>看看绩点</button>
+    </div>
+    <div class="container" id="resultContainer">
+      <div class="alert" role="alert" id="resultAlert"></div>
+    </div>  
+    <script type="text/javascript">
+      var div1=document.createElement("div"),cal=document.getElementById("cal"),count=2;document.getElementById("delete").addEventListener("click",function(){if(count>1){var b=cal.getElementsByClassName("col-lg-4");b[b.length-1].remove(),count--}}),document.getElementById("add").addEventListener("click",function(){var b=document.getElementById("calRow"),c=document.createElement("div");c.className="col-lg-4 col-md-4 col-sm-4 col-xs-4";var d=document.createElement("div");d.className="input-group";var e=document.createElement("span");e.innerHTML="\u7b2c"+ ++count+"\u79d1\u76ee",e.className="input-group-addon";var f=document.createElement("input");f.setAttribute("type","text"),f.setAttribute("placeholder","\u5b66\u5206"),f.className="form-control";var g=document.createElement("input");g.setAttribute("type","text"),g.setAttribute("placeholder","\u6210\u7ee9"),g.className="form-control",d.appendChild(e),d.appendChild(f),d.appendChild(g),c.appendChild(d),b.appendChild(c)}),document.getElementById("result").addEventListener("click",function(){for(var b=document.getElementById("resultAlert"),c=document.getElementsByClassName("input-group"),d=0;d<c.length;d++){var e=c[d],f=e.getElementsByTagName("span")[0],g=e.getElementsByTagName("input"),h=f.innerHTML;if(!/\d+/.test(g[0].value))return b.className="alert alert-danger",b.innerHTML="\u8bf7\u8f93\u5165"+h+g[0].getAttribute("placeholder"),void 0;if(!/\d+/.test(g[1].value))return b.className="alert alert-danger",b.innerHTML="\u8bf7\u8f93\u5165"+h+g[1].getAttribute("placeholder"),void 0}for(var i=[],d=0;d<c.length;d++){var e=c[d],j=e.getElementsByTagName("input")[0].value,k=e.getElementsByTagName("input")[1].value;i.push({mark:parseInt(j),score:parseInt(k)})}for(var d=0;d<i.length;d++){var k=i[d].score;console.log(k),k>=90&&100>=k?i[d].jidian=4:k>=85&&90>k?i[d].jidian=3.7:k>=82&&85>k?i[d].jidian=3.3:k>=78&&82>k?i[d].jidian=3:k>=75&&78>k?i[d].jidian=2.7:k>=72&&75>k?i[d].jidian=2.3:k>=68&&72>k?i[d].jidian=2:k>=64&&68>k?i[d].jidian=1.5:k>=60&&64>k?i[d].jidian=1:60>k&&(i[d].jidian=0)}var l=0,m=0;console.log(i);for(var d=0;d<i.length;d++)l+=i[d].mark*i[d].jidian,m+=i[d].mark;var n=new Number(l/m).toFixed(2);b.className="alert alert-success",b.innerHTML="\u603b\u5b66\u5206\uff1a"+Number(m).toFixed(0)+" <br/>\u7ee9\u70b9 X \u5b66\u5206\u4e00\u5171\uff1a"+Number(l).toFixed(2)+" <br/>\u5e73\u5747\u7ee9\u70b9\u5c31\u662f\uff1a"+n});
+    </script>
+  </body>
+</html>
